@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <property name="DEFAULT_LOG_PATTERN" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%t] %-40.40logger{39} -[%line]: %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+       <encoder>
+           <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+       </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-10MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-0}</maxHistory>
+        </rollingPolicy>
+    </appender>
+    
+	<logger name="javax" level="ERROR"/>
+	<logger name="com.sun" level="ERROR"/>
+	<logger name="springfox" level="ERROR"/>
+	<logger name="org.apache" level="ERROR"/>
+	<logger name="com.zaxxer" level="ERROR"/>
+	<logger name="org.hibernate" level="ERROR"/>
+	<logger name="org.springframework" level="ERROR"/>
+
+    <springProfile name="default">
+	    <root>
+	        <level value="DEBUG"/>
+	        <appender-ref ref="CONSOLE"/>
+	    </root>
+	</springProfile>
+	<springProfile name="test">
+	    <root>
+	        <level value="INFO"/>
+	        <appender-ref ref="FILE" />
+	    </root>
+	</springProfile>
+</configuration>

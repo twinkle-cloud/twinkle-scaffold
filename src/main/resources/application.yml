@@ -1,7 +1,12 @@
 server:
   port: 8080
-  
+
+logging:
+  path: E:\tem\logs\${spring.application.name}
+
 spring:
+  application:
+    name: twinkle-scaffold
   #jpa相关配置
   jpa:
     show-sql: true
@@ -17,7 +22,7 @@ spring:
     url: jdbc:mysql://localhost:3306/twinkle_scaffold?useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     testWhileIdle: true
     validationQuery: SELECT 1
   #系统邮件相关配置    

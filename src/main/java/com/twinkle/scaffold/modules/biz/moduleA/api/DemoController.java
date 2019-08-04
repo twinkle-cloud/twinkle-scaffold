@@ -43,6 +43,8 @@ public class DemoController {
     @GetMapping("/noauth/test2")
     @ApiOperation(value = "测试接口2", notes = "测试接口2")
     public GeneralResult<String> noauth(){
+        log.debug("debug log");
+        log.info("info log");
         return new GeneralResult<String>(ResultCode.OPERATE_SUCCESS,null,"noauth");
     }
 }
