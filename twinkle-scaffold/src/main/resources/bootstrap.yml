@@ -1,0 +1,4 @@
+spring:
+  profiles: default
+  application:
+    name: twinkle-scaffold

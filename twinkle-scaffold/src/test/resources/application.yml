@@ -1,0 +1,33 @@
+server:
+  port: 8080
+  
+spring:
+  #jpa相关配置
+  jpa:
+    show-sql: true
+    database: MYSQL
+    hibernate:
+      ddl-auto: none
+      naming-strategy: org.hibernate.cfg.DefaultNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  #数据源相关配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/twinkle_scaffold?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  #系统邮件相关配置    
+  mail:
+    host: smtp.126.com
+    username: yk163001
+    #发送方的授权码
+    password: xxx
+    port: 25
+    protocol: smtp
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: false
