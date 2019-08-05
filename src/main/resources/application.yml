@@ -7,8 +7,6 @@ logging:
 spring:
   application:
     name: twinkle-scaffold
-  profiles:
-    active: test
   #jpa相关配置
   jpa:
     show-sql: true

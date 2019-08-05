@@ -1,10 +1,13 @@
 package com.twinkle.scaffold.config;
 
+import java.util.UUID;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import com.twinkle.scaffold.common.constants.ResultCode;
@@ -22,9 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ApiAspect {
 
-    private final static Long EXPECT_MAX_HANDLE_TIME = 2 * 1000L; // 2 s
-    private final static String CONTROLLER_BASE_PACKAGE = "com.twinkle.scaffold.modules";
-
+    private static final Long EXPECT_MAX_HANDLE_TIME = 2 * 1000L; // 2 s
+    private static final String CONTROLLER_BASE_PACKAGE = "com.twinkle.scaffold.modules";
+    private static final String TRACE_ID = "traceId";
+    
     @Pointcut("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api..*.*(..))")
     public void api() {
     }
@@ -34,8 +38,9 @@ public class ApiAspect {
      */
     @Around("api()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
+        insertMDC();
         Object[] args = pjp.getArgs();
-        String className = pjp.getTarget().getClass().getName();
+        String className = pjp.getTarget().getClass().getSimpleName();
         String methodName = pjp.getSignature().getName();
         log.info("class:{},methodName:{},args:{}", className, methodName, args);
         Long startTimeMillis = System.currentTimeMillis();
@@ -75,5 +80,12 @@ public class ApiAspect {
             errorResult.setDesc(e.getMessage());
         }
         return errorResult;
+    }
+    
+    private boolean insertMDC() {
+        UUID uuid = UUID.randomUUID();
+        String uniqueId = uuid.toString().replace("-", "");
+        MDC.put(TRACE_ID, uniqueId);
+        return true;
     }
 }

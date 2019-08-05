@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
-    <property name="DEFAULT_LOG_PATTERN" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%t] %-40.40logger{39} -[%line]: %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="DEFAULT_LOG_PATTERN" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%X{traceId}] %-40.40logger{39} -[%line]: %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
     
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
        <encoder>
