@@ -6,18 +6,37 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
        <encoder>
            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+           <charset>UTF-8</charset>
        </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/app.log</file>
         <encoder>
             <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
         </encoder>
-        <file>${LOG_FILE}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <maxFileSize>${LOG_FILE_MAX_SIZE:-10MB}</maxFileSize>
-            <maxHistory>${LOG_FILE_MAX_HISTORY:-0}</maxHistory>
+            <fileNamePattern>${LOG_PATH}/app.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-1024MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-30}</maxHistory>
         </rollingPolicy>
+    </appender>
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/error.log</file>
+        <encoder>
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/error.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-1024MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-30}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <OnMatch>ACCEPT</OnMatch>  
+            <OnMismatch>DENY</OnMismatch>  
+        </filter>
     </appender>
     
 	<logger name="javax" level="ERROR"/>
@@ -38,6 +57,13 @@
 	    <root>
 	        <level value="INFO"/>
 	        <appender-ref ref="FILE" />
+	        <appender-ref ref="ERROR_FILE" />
 	    </root>
 	</springProfile>
+	<springProfile name="prod">
+        <root>
+            <level value="INFO"/>
+            <appender-ref ref="ERROR_FILE" />
+        </root>
+    </springProfile>
 </configuration>

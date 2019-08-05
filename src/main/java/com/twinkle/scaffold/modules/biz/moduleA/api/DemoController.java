@@ -1,14 +1,8 @@
 package com.twinkle.scaffold.modules.biz.moduleA.api;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.twinkle.scaffold.common.constants.ResultCode;
 import com.twinkle.scaffold.common.data.GeneralResult;
 import com.twinkle.scaffold.common.utils.CurrentUserUtils;
@@ -45,6 +39,7 @@ public class DemoController {
     public GeneralResult<String> noauth(){
         log.debug("debug log");
         log.info("info log");
+        int i = 1/0;
         return new GeneralResult<String>(ResultCode.OPERATE_SUCCESS,null,"noauth");
     }
 }

@@ -1,11 +1,11 @@
 package com.twinkle.scaffold.config;
 
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
 
 import com.twinkle.scaffold.common.constants.ResultCode;
 import com.twinkle.scaffold.common.data.GeneralResult;
@@ -14,9 +14,10 @@ import com.twinkle.scaffold.common.error.GeneralException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * controller 切面拦截
+ * API 切面拦截
  * 
  */
+@Component
 @Aspect
 @Slf4j
 public class ApiAspect {
@@ -24,7 +25,7 @@ public class ApiAspect {
     private final static Long EXPECT_MAX_HANDLE_TIME = 2 * 1000L; // 2 s
     private final static String CONTROLLER_BASE_PACKAGE = "com.twinkle.scaffold.modules";
 
-    @Pointcut("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api.*.*(..))")
+    @Pointcut("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api..*.*(..))")
     public void api() {
     }
 
@@ -68,9 +69,8 @@ public class ApiAspect {
         if (e instanceof GeneralException) {
             errorResult.setCode(((GeneralException) e).getCode());
             errorResult.setDesc(((GeneralException) e).getDesc());
-        }
-        if (StringUtils.isBlank(errorResult.getCode())) {
-            log.error(e.getMessage(), e);
+            errorResult.setData(((GeneralException) e).getData());
+        }else{
             errorResult.setCode(ResultCode.SERVER_ERROR);
             errorResult.setDesc(e.getMessage());
         }
