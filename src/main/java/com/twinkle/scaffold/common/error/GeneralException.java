@@ -1,11 +1,13 @@
 package com.twinkle.scaffold.common.error;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 通用异常
  * */
 @Data
+@ToString
 public class GeneralException extends RuntimeException{
 
     /**

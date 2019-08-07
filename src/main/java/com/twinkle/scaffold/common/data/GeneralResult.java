@@ -4,11 +4,13 @@ import java.io.Serializable;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 通用返回
  * */
 @Data
+@ToString
 public class GeneralResult<T> implements Serializable{
 
     /**

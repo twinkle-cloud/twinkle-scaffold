@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * TODO ADD DESC <br/>
@@ -24,6 +25,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 @Entity(name="ac_resource_operation")
 public class ResourceOperation implements Serializable{
 

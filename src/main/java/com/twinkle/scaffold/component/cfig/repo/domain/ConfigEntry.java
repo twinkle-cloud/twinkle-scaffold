@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 配置实体 <br/>
@@ -22,6 +23,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 @Entity(name="cfig_config_entry")
 public class ConfigEntry implements Serializable{
     

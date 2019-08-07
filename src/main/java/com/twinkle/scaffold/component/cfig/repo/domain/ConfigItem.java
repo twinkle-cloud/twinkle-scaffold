@@ -5,14 +5,12 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.twinkle.scaffold.component.auth.repo.domain.Resource;
-
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * TODO ADD DESC <br/>
@@ -22,6 +20,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 @Entity(name="cfig_config_item")
 public class ConfigItem implements Serializable{
     

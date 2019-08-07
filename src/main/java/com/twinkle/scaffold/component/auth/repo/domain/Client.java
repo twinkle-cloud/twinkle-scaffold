@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * TODO ADD DESC <br/>
@@ -18,6 +19,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 @Entity(name="oauth_client")
 public class Client implements Serializable{
 

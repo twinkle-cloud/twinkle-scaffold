@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 抽象一个短信公共字段 <br/>
@@ -14,6 +15,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 public abstract class AbstractShortMsg implements Serializable{
 
     protected String content;

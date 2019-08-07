@@ -2,9 +2,9 @@ package com.twinkle.scaffold.modules.base.cfig.data;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * TODO ADD DESC <br/>
@@ -16,6 +16,7 @@ import lombok.Data;
  */
 
 @Data
+@ToString
 public class ConfigEntrySearchRes implements Serializable{
     
     private String code;

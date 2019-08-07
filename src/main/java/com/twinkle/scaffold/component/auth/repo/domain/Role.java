@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * TODO ADD DESC <br/>
@@ -23,6 +24,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 @Entity(name="ac_role")
 public class Role implements Serializable{
     

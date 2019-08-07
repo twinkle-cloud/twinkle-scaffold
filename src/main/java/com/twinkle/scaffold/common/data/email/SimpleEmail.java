@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * TODO ADD DESC <br/>
@@ -14,6 +15,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 public class SimpleEmail implements Serializable{
 
     protected String from;

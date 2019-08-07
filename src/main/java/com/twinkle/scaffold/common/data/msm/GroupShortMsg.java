@@ -3,6 +3,7 @@ package com.twinkle.scaffold.common.data.msm;
 import java.util.List;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 群发短信 <br/>
@@ -13,6 +14,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 public class GroupShortMsg extends AbstractShortMsg{
 
     private List<String> targetMobileList;

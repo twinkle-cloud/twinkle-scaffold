@@ -9,8 +9,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.twinkle.scaffold.component.cfig.constants.CfigConstants;
 import com.twinkle.scaffold.component.cfig.repo.ConfigEntryRepo;
 import com.twinkle.scaffold.component.cfig.repo.domain.ConfigEntry;

@@ -79,6 +79,12 @@
 		    <version>1.4.7</version>
 		</dependency>
         <!-- email -->
+        <!-- redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- redis -->
         <dependency>
 		    <groupId>org.apache.velocity</groupId>
 		    <artifactId>velocity</artifactId>

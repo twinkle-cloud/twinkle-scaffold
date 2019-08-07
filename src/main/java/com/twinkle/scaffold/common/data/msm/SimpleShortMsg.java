@@ -1,6 +1,7 @@
 package com.twinkle.scaffold.common.data.msm;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 简单的手机短信 ，适合于点对点发送 <br/>
@@ -11,6 +12,7 @@ import lombok.Data;
  * @since JDK 1.8
  */
 @Data
+@ToString
 public class SimpleShortMsg extends AbstractShortMsg{
 
     private String targetMobile;
