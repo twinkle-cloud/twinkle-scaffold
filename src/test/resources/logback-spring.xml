@@ -11,12 +11,15 @@
     </appender>
     
 	<logger name="javax" level="ERROR"/>
-	<logger name="com.sun" level="ERROR"/>
-	<logger name="springfox" level="ERROR"/>
-	<logger name="org.apache" level="ERROR"/>
-	<logger name="com.zaxxer" level="ERROR"/>
-	<logger name="org.hibernate" level="ERROR"/>
-	<logger name="org.springframework" level="ERROR"/>
+    <logger name="reactor" level="ERROR"/>
+    <logger name="com.sun" level="ERROR"/>
+    <logger name="io.netty" level="ERROR"/>
+    <logger name="io.lettuce" level="ERROR"/>
+    <logger name="springfox" level="ERROR"/>
+    <logger name="org.apache" level="ERROR"/>
+    <logger name="com.zaxxer" level="ERROR"/>
+    <logger name="org.hibernate" level="ERROR"/>
+    <logger name="org.springframework" level="ERROR"/>
 
     <root>
         <level value="DEBUG"/>

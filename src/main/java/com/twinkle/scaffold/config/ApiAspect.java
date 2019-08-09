@@ -8,8 +8,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.twinkle.scaffold.common.constants.AspectConstant;
 import com.twinkle.scaffold.common.constants.ResultCode;
 import com.twinkle.scaffold.common.data.GeneralResult;
 import com.twinkle.scaffold.common.error.GeneralException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Aspect
+@Order(AspectConstant.APIASPECT_ORDER)
 @Slf4j
 public class ApiAspect {
 
@@ -29,15 +32,11 @@ public class ApiAspect {
     private static final String CONTROLLER_BASE_PACKAGE = "com.twinkle.scaffold.modules";
     private static final String TRACE_ID = "traceId";
     
-    @Pointcut("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api..*.*(..))")
-    public void api() {
-    }
-
     /**
      * 打印输入输出及处理时间过长的日志 针对异常的统一处理
      */
-    @Around("api()")
-    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+    @Around("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api..*.*(..))")
+    public Object aroundApi(ProceedingJoinPoint pjp) throws Throwable {
         insertMDC();
         Object[] args = pjp.getArgs();
         String className = pjp.getTarget().getClass().getSimpleName();
@@ -65,12 +64,12 @@ public class ApiAspect {
      * 统一的异常处理
      */
     private GeneralResult handleException(Class returnType, Exception e) throws Throwable {
-        GeneralResult errorResult = null;
-        if (returnType.equals(GeneralResult.class)) {
-            errorResult = new GeneralResult();
-        } else {
-            throw e;
-        }
+        GeneralResult errorResult = new GeneralResult();
+//        if (returnType.equals(GeneralResult.class)) {
+//            errorResult = new GeneralResult();
+//        } else {
+//            throw e;
+//        }
         if (e instanceof GeneralException) {
             errorResult.setCode(((GeneralException) e).getCode());
             errorResult.setDesc(((GeneralException) e).getDesc());

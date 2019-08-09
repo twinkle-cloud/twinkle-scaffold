@@ -8,7 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RedisClient {
 
-	private static final int DEFAULT_RETRY_INTERVAL = 200;// ms
+    private final static int DEFAULT_ADDLOCK_RETRY_INTERVAL = 100;
 
 	@Autowired
 	@Nullable
@@ -54,6 +58,21 @@ public class RedisClient {
 		}
 	}
 
+	/**
+     * increment
+     */
+    public Long increment(String key) {
+        return redisTemplate.opsForValue().increment(key);
+        
+    }
+    
+    /**
+     * increment
+     */
+    public Boolean expire(String key,Long timeout,TimeUnit unit) {
+        return redisTemplate.expire(key, timeout, unit);
+    }
+    
 	/**
 	 * 将对象保存为redis中String类型
 	 */
@@ -188,33 +207,46 @@ public class RedisClient {
 	 * @param retryCount 枷锁失败后的尝试次数
 	 * @return true 加锁成功，加锁失败
 	 * */
-	public boolean addLock(String key, int lockTimeout, int retryCount) {
-		Boolean setResult = redisTemplate.opsForValue().setIfAbsent(key, key + "LOCK");
-		if (setResult) {
-			redisTemplate.expire(key, lockTimeout, TimeUnit.SECONDS);
-			return true;
-		}
-		try {
-			Thread.sleep(DEFAULT_RETRY_INTERVAL);
-		} catch (InterruptedException e) {
-			log.error(e.getMessage(), e);
-		}
-		if (!setResult) {
-			int count = retryCount;
-			while (count > 0) {
-				setResult = redisTemplate.opsForValue().setIfAbsent(key, key + "LOCK");
-				if (setResult) {
-					redisTemplate.expire(key, lockTimeout, TimeUnit.SECONDS);
-					return true;
-				}
-				try {
-					Thread.sleep(DEFAULT_RETRY_INTERVAL);
-				} catch (InterruptedException e) {
-					log.error(e.getMessage(), e);
-				}
-				count--;
-			}
-		}
-		return false;
-	}
+	
+	public boolean addLock(String key,Long lockMilliseconds,int retryCount) {
+        if (this.setIfAbsentLock(key,"TRUE",lockMilliseconds)) {
+            return true;
+        }else{
+            try {
+                Thread.sleep(DEFAULT_ADDLOCK_RETRY_INTERVAL);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+            int count = retryCount;
+            while (count > 0) {
+                if (this.setIfAbsentLock(key,"TRUE",lockMilliseconds)) {
+                    return true;
+                }
+                count--;
+                try {
+                    Thread.sleep(DEFAULT_ADDLOCK_RETRY_INTERVAL);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }
+        return false;
+    }
+	
+	private Boolean setIfAbsentLock(String key,String value,Long milliseconds){
+        RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
+        byte[] rawKey = serializer.serialize(key);
+        byte[] rawValue = serializer.serialize(value);
+        byte[] ex = serializer.serialize("PX");
+        byte[] nx = serializer.serialize("NX");
+        byte[] expire = serializer.serialize(String.valueOf(milliseconds));
+        String result = redisTemplate.execute(new RedisCallback<String>() {
+            @Override
+            public String doInRedis(RedisConnection connection) throws DataAccessException {
+               return (String) connection.execute("set", new byte[][]{
+                    rawKey,rawValue,ex,expire,nx});
+            }
+        }, true);
+        return "OK".equals(result);
+    }
 }

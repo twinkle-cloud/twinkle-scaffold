@@ -5,6 +5,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
+import com.twinkle.scaffold.common.constants.ResultCode;
+import com.twinkle.scaffold.common.error.GeneralException;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,8 +31,7 @@ public class CurrentUserUtils {
             UserDetails userDetails = (UserDetails)authentication.getPrincipal();
             return userDetails.getUsername();
         } catch (Exception e) {
-            log.info(e.getMessage(),e);
-            return null;
+            throw new GeneralException(ResultCode.NO_CURRENT_USER,"当前用户不存在");
         }
     }
     
@@ -43,8 +45,7 @@ public class CurrentUserUtils {
             OAuth2AuthenticationDetails authenticationDetails = (OAuth2AuthenticationDetails)authentication.getDetails();
             return authenticationDetails.getTokenValue();
         } catch (Exception e) {
-            log.info(e.getMessage(),e);
-            return null;
+            throw new GeneralException(ResultCode.NO_CURRENT_USER,"当前用户不存在");
         }
     }
 }
