@@ -1,5 +1,6 @@
-package com.twinkle.scaffold.modules.base.file.data;
+package com.twinkle.scaffold.component.file.data;
 
+import java.io.InputStream;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -19,5 +20,8 @@ public class SimpleFile implements Serializable {
 
     private String id;
     private String name;
+    private long size;
+    private String contentType;
+    private InputStream inputStream;
     
 }

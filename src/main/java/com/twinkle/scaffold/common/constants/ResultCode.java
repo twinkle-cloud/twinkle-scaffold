@@ -23,6 +23,10 @@ public class ResultCode {
      * */
     public static String PARAM_INVALID = "102";
     /**
+     * 数据不存在
+     * */
+    public static String NO_ENTRY = "103";
+    /**
      * 权限不合法
      * */
     public static String AUTH_FAILD = "401";

@@ -42,10 +42,10 @@ public class ConfigEntry implements Serializable{
     @Column(name="ITEM_STRUCTURE_TYPE")
     private Byte itemStructureType;
     
-    @Column(name="CREATED_TIME")
+    @Column(name="CREATED_TIME",insertable=false,updatable=false)
     private Timestamp createdTime;
     
-    @Column(name="UPDATED_TIME")
+    @Column(name="UPDATED_TIME",insertable=false,updatable=false)
     private Timestamp updatedTime;
 
     @OneToMany(mappedBy="configEntry",fetch = FetchType.EAGER)

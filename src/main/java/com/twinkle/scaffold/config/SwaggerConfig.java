@@ -29,7 +29,7 @@ public class SwaggerConfig {
         String moduleDesc = "demo module";
         String basePackage = getDefaultModulePackage(moduleName,false);
         ApiInfo apiInfo = createApiInfo(moduleName,moduleDesc);
-        Docket docket = createDocket(moduleName,basePackage,apiInfo);
+        Docket docket = createDocket(moduleName,basePackage,apiInfo,false);
         return docket;
     }
     
@@ -40,7 +40,7 @@ public class SwaggerConfig {
         String moduleDesc = "服务管理";
         String basePackage = getDefaultModulePackage(moduleName,true);
         ApiInfo apiInfo = createApiInfo(moduleName,moduleDesc);
-        Docket docket = createDocket(moduleName,basePackage,apiInfo);
+        Docket docket = createDocket(moduleName,basePackage,apiInfo,true);
         return docket;
     }
     
@@ -50,7 +50,7 @@ public class SwaggerConfig {
         String moduleDesc = "配置API";
         String basePackage = getDefaultModulePackage(moduleName,true);
         ApiInfo apiInfo = createApiInfo(moduleName,moduleDesc);
-        Docket docket = createDocket(moduleName,basePackage,apiInfo);
+        Docket docket = createDocket(moduleName,basePackage,apiInfo,true);
         return docket;
     }
     
@@ -60,7 +60,7 @@ public class SwaggerConfig {
         String moduleDesc = "文件管理API";
         String basePackage = getDefaultModulePackage(moduleName,true);
         ApiInfo apiInfo = createApiInfo(moduleName,moduleDesc);
-        Docket docket = createDocket(moduleName,basePackage,apiInfo);
+        Docket docket = createDocket(moduleName,basePackage,apiInfo,true);
         return docket;
     }
 
@@ -83,7 +83,10 @@ public class SwaggerConfig {
         return apiInfo;
     }
     
-    private Docket createDocket(String moduleName,String basePackage,ApiInfo apiInfo){
+    private Docket createDocket(String moduleName,String basePackage,ApiInfo apiInfo,boolean base){
+        if(base){
+            moduleName = "base:"+moduleName; 
+        }
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                         .groupName(moduleName).apiInfo(apiInfo)
                         .genericModelSubstitutes(DeferredResult.class)

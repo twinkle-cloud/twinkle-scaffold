@@ -39,9 +39,9 @@ public class Client implements Serializable{
     @Column(name="SCOPE")
     private String scope;
     
-    @Column(name="CREATED_TIME")
+    @Column(name="CREATED_TIME",insertable=false,updatable=false)
     private Timestamp createdTime;
     
-    @Column(name="UPDATED_TIME")
+    @Column(name="UPDATED_TIME",insertable=false,updatable=false)
     private Timestamp updatedTime;
 }

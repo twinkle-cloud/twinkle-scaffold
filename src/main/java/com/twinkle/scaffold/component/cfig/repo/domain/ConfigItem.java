@@ -48,10 +48,10 @@ public class ConfigItem implements Serializable{
     @Column(name="PARENT_ID")
     private Long parentId;
     
-    @Column(name="CREATED_TIME")
+    @Column(name="CREATED_TIME",insertable=false,updatable=false)
     private Timestamp createdTime;
     
-    @Column(name="UPDATED_TIME")
+    @Column(name="UPDATED_TIME",insertable=false,updatable=false)
     private Timestamp updatedTime;
     
     @ManyToOne

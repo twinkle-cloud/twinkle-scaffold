@@ -3,10 +3,13 @@ server:
 
 logging:
   path: E:\tem\logs\${spring.application.name}
-
 spring:
   application:
     name: twinkle-scaffold
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
   #jpa相关配置
   jpa:
     show-sql: true

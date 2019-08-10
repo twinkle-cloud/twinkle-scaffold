@@ -50,13 +50,13 @@ public class User implements Serializable{
     @Column(name="REGISTER_SOURCE")
     private String registerSource;
     
-    @Column(name="STATUS")
+    @Column(name="STATUS",insertable=false)
     private Byte status;
     
-    @Column(name="CREATED_TIME")
+    @Column(name="CREATED_TIME",insertable=false,updatable=false)
     private Timestamp createdTime;
     
-    @Column(name="UPDATED_TIME")
+    @Column(name="UPDATED_TIME",insertable=false,updatable=false)
     private Timestamp updatedTime;
     
     @ManyToMany(mappedBy="userList",fetch = FetchType.EAGER)

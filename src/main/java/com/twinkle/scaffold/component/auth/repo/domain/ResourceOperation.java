@@ -40,10 +40,10 @@ public class ResourceOperation implements Serializable{
     @Column(name="RESOURCE_CODE")
     private String resourceCode;
     
-    @Column(name="CREATED_TIME")
+    @Column(name="CREATED_TIME",insertable=false,updatable=false)
     private Timestamp createdTime;
     
-    @Column(name="UPDATED_TIME")
+    @Column(name="UPDATED_TIME",insertable=false,updatable=false)
     private Timestamp updatedTime;
     
     @ManyToMany
