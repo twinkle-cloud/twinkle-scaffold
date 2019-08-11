@@ -2,6 +2,7 @@ package com.twinkle.scaffold.component.file.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.twinkle.scaffold.component.file.repo.domain.FileEntry;
 
@@ -16,4 +17,6 @@ import com.twinkle.scaffold.component.file.repo.domain.FileEntry;
 @Repository
 public interface FileEntryRepo extends JpaRepository<FileEntry,String>{
 
+    @Transactional
+    void deleteByIdIn(String[] ids);
 }

@@ -2,6 +2,7 @@ package com.twinkle.scaffold.component.file;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.rowset.serial.SerialException;
 
@@ -22,6 +23,11 @@ public interface IFileManager {
     /**
      * 保存文件
      * */
+    public List<SimpleFile> storeFiles(MultipartFile[] multipartFiles) throws SerialException, SQLException, IOException ;
+    
+    /**
+     * 保存文件
+     * */
     public SimpleFile storeFile(MultipartFile multipartFile) throws SerialException, SQLException, IOException ;
     
     /**
@@ -30,8 +36,13 @@ public interface IFileManager {
     public SimpleFile getFileById(String id) throws SQLException;
     
     /**
-     * 更新文件
+     * 删除单个文件
      * */
-    public SimpleFile updateFile(String id,MultipartFile multipartFile) throws SerialException, SQLException, IOException ;
+    public void deleteFile(String id);
+    
+    /**
+     * 批量删除文件
+     * */
+    public void deleteFiles(String[] ids);
 
 }

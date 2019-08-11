@@ -3,6 +3,8 @@ package com.twinkle.scaffold.component.file;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -19,7 +21,7 @@ import com.twinkle.scaffold.component.file.repo.FileEntryRepo;
 import com.twinkle.scaffold.component.file.repo.domain.FileEntry;
 
 /**
- * TODO ADD DESC <br/>
+ * 通过数据库保存文件  <br/>
  * Date:    2019年8月10日 下午9:57:35 <br/>
  *
  * @author yukang
@@ -33,17 +35,32 @@ public class JdbcFileManager implements IFileManager {
     private FileEntryRepo fileEntryRepo;
     
     @Override
+    public List<SimpleFile> storeFiles(MultipartFile[] multipartFiles) throws SerialException, SQLException, IOException {
+        List<FileEntry> fileEntryList = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            FileEntry fileEntry = buildFileEntry(multipartFile);
+            fileEntryList.add(fileEntry);
+        }
+        fileEntryRepo.saveAll(fileEntryList);
+        List<SimpleFile> simpleFileList = new ArrayList<>();
+        for (FileEntry fileEntry : fileEntryList) {
+            SimpleFile simpleFile = new SimpleFile();
+            simpleFile.setId(fileEntry.getId());
+            simpleFile.setName(fileEntry.getName());
+            simpleFile.setContentType(fileEntry.getContentType());
+            simpleFileList.add(simpleFile);
+        }
+        return simpleFileList;
+    }
+    
+    @Override
     public SimpleFile storeFile(MultipartFile multipartFile) throws SerialException, SQLException, IOException {
-        FileEntry fileEntry = new FileEntry();
-        fileEntry.setName(multipartFile.getOriginalFilename());
-        fileEntry.setContentType(multipartFile.getContentType());
-        fileEntry.setSize(multipartFile.getSize());
-        Blob content = new SerialBlob(multipartFile.getBytes());
-        fileEntry.setContent(content);
+        FileEntry fileEntry = buildFileEntry(multipartFile);
         fileEntryRepo.save(fileEntry);
         SimpleFile simpleFile = new SimpleFile();
         simpleFile.setId(fileEntry.getId());
-        simpleFile.setName(multipartFile.getOriginalFilename());
+        simpleFile.setName(fileEntry.getName());
+        simpleFile.setContentType(fileEntry.getContentType());
         return simpleFile;
     }
 
@@ -64,9 +81,23 @@ public class JdbcFileManager implements IFileManager {
     }
 
     @Override
-    public SimpleFile updateFile(String id, MultipartFile multipartFile)  throws SerialException, SQLException, IOException {
-        // TODO Auto-generated method stub
-        return null;
+    public void deleteFile(String id) {
+        fileEntryRepo.deleteById(id);
     }
 
+    @Override
+    public void deleteFiles(String[] ids) {
+        fileEntryRepo.deleteByIdIn(ids);
+    }
+
+    private FileEntry buildFileEntry(MultipartFile multipartFile) throws SerialException, SQLException, IOException{
+        FileEntry fileEntry = new FileEntry();
+        fileEntry.setName(multipartFile.getOriginalFilename());
+        fileEntry.setContentType(multipartFile.getContentType());
+        fileEntry.setSize(multipartFile.getSize());
+        Blob content = new SerialBlob(multipartFile.getBytes());
+        fileEntry.setContent(content);
+        return fileEntry;
+    }
+    
 }
