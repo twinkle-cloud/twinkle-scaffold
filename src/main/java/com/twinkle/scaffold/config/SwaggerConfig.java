@@ -35,16 +35,6 @@ public class SwaggerConfig {
     
     // 以下为基础模块配置
     @Bean
-    public Docket mgmtSwaggerApi() {
-        String moduleName = "mgmt";
-        String moduleDesc = "服务管理";
-        String basePackage = getDefaultModulePackage(moduleName,true);
-        ApiInfo apiInfo = createApiInfo(moduleName,moduleDesc);
-        Docket docket = createDocket(moduleName,basePackage,apiInfo,true);
-        return docket;
-    }
-    
-    @Bean
     public Docket cfigSwaggerApi() {
         String moduleName = "cfig";
         String moduleDesc = "配置API";

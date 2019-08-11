@@ -1,8 +1,22 @@
+#actuator端口 
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      base-path: /mgmt
+      exposure:
+        include: "health,info,metrics"
+  endpoint:
+    health:
+      show-details: always
+
 server:
   port: 8080
 
 logging:
   path: E:\tem\logs\${spring.application.name}
+
 spring:
   application:
     name: twinkle-scaffold
@@ -44,7 +58,7 @@ spring:
     host: smtp.126.com
     username: yk163001
     #发送方的授权码
-    password: xxx
+    password: yk123456
     port: 25
     protocol: smtp
     properties:
