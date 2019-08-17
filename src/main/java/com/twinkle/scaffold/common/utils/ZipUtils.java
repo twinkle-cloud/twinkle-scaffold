@@ -1,5 +1,7 @@
 package com.twinkle.scaffold.common.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,6 +26,16 @@ public class ZipUtils {
     
     private static final int BUFFER_SIZE = 2 * 1024;
 
+    /**
+     * 将多文件压缩,合并为一个输入流返回
+     * */
+    public static ByteArrayInputStream compress(List<SourceFile> sourceFileList) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        compressToOut(baos,sourceFileList);
+        ByteArrayInputStream swapStream = new ByteArrayInputStream(baos.toByteArray());
+        return swapStream;
+    }
+    
     /**
      * 将多文件压缩至输出流
      * */
