@@ -7,12 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialException;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -23,12 +26,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.twinkle.scaffold.common.constants.ResultCode;
 import com.twinkle.scaffold.common.data.GeneralResult;
+import com.twinkle.scaffold.common.utils.ApiParamUtils;
+import com.twinkle.scaffold.common.utils.ZipUtils;
 import com.twinkle.scaffold.component.file.IFileManager;
 import com.twinkle.scaffold.component.file.data.SimpleFile;
 
@@ -115,6 +121,7 @@ public class FileController {
     
     @ApiOperation(value = "文件下载", notes = "支持断点续传的文件下载,适合连接流媒体",produces="application/octet-stream")
     @ApiImplicitParams({
+        @ApiImplicitParam(paramType = "header", name = "Authorization", required = true,defaultValue = "Bearer "),
         @ApiImplicitParam(name = "id",value="文件ID",required = true)})
     @GetMapping(value="/auth/v1/file/singlefile/{id}/ranges")
     public void noauthGetfile(@PathVariable("id") String id,HttpServletRequest request, HttpServletResponse response) throws SQLException {
@@ -188,5 +195,23 @@ public class FileController {
                 }
             }
         }
+    }
+    
+    @ApiOperation(value = "文件下载", notes = "支持压缩文件，适合多文件下载",produces="application/octet-stream")
+    @ApiImplicitParams({
+        @ApiImplicitParam(paramType = "header", name = "Authorization", required = true,defaultValue = "Bearer ")})
+    @GetMapping(value="/auth/v1/file/files")
+    public void noauthGetfile(@RequestParam("ids") String id,HttpServletResponse response) throws SQLException, IOException {
+        List<String> ids = ApiParamUtils.convertToStringList(id);
+        List<SimpleFile> simpleFiles = jdbcFileManager.getFileByIds(ids.toArray(new String[ids.size()]));
+        List<ZipUtils.SourceFile> sourceFileList = new ArrayList<>();
+        for (SimpleFile simpleFile : simpleFiles) {
+            sourceFileList.add(new ZipUtils.SourceFile(simpleFile.getName(),simpleFile.getInputStream()));
+        }
+        OutputStream out = response.getOutputStream();
+        response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"",RandomStringUtils.randomNumeric(6)+".zip"));  
+        response.setContentType("application/zip");
+        ZipUtils.compressToOut(out, sourceFileList);
+        out.close();
     }
 }

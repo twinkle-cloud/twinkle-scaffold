@@ -36,6 +36,12 @@ public interface IFileManager {
     public SimpleFile getFileById(String id) throws SQLException;
     
     /**
+     * 根据Id列表,查询文件，返回多个文件流
+     * */
+    public List<SimpleFile> getFileByIds(String[] ids) throws SQLException;
+    
+    
+    /**
      * 删除单个文件
      * */
     public void deleteFile(String id);

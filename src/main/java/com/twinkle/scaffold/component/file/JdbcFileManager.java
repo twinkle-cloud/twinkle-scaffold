@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,6 +99,25 @@ public class JdbcFileManager implements IFileManager {
         Blob content = new SerialBlob(multipartFile.getBytes());
         fileEntry.setContent(content);
         return fileEntry;
+    }
+
+    @Override
+    public List<SimpleFile> getFileByIds(String[] ids) throws SQLException {
+        List<FileEntry> fileEntrys = fileEntryRepo.findByIdIn(ids);
+        if(CollectionUtils.isEmpty(fileEntrys)){
+            throw new GeneralException(ResultCode.NO_ENTRY);
+        }
+        List<SimpleFile> result = new ArrayList<>();
+        for (FileEntry fileEntry : fileEntrys) {
+            SimpleFile simpleFile = new SimpleFile();
+            simpleFile.setId(fileEntry.getId());
+            simpleFile.setName(fileEntry.getName());
+            simpleFile.setSize(fileEntry.getSize());
+            simpleFile.setContentType(fileEntry.getContentType());
+            simpleFile.setInputStream(fileEntry.getContent().getBinaryStream());
+            result.add(simpleFile);
+        }
+        return result;
     }
     
 }
