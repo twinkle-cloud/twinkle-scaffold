@@ -5,16 +5,20 @@ import java.util.UUID;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.twinkle.scaffold.common.constants.AspectConstant;
+import com.twinkle.scaffold.common.constants.EventCode;
 import com.twinkle.scaffold.common.constants.ResultCode;
+import com.twinkle.scaffold.common.data.GeneralEvent;
 import com.twinkle.scaffold.common.data.GeneralResult;
+import com.twinkle.scaffold.common.data.sysevent.SysExceptionData;
+import com.twinkle.scaffold.common.data.sysevent.SysTimeoutData;
 import com.twinkle.scaffold.common.error.GeneralException;
+import com.twinkle.scaffold.common.utils.SpringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +41,7 @@ public class ApiAspect {
      */
     @Around("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api..*.*(..))")
     public Object aroundApi(ProceedingJoinPoint pjp) throws Throwable {
+        // 放入一个tranceId 方便跟踪日志
         insertMDC();
         Object[] args = pjp.getArgs();
         String className = pjp.getTarget().getClass().getSimpleName();
@@ -49,13 +54,26 @@ public class ApiAspect {
         } catch (Exception e) {
             MethodSignature ms = (MethodSignature) pjp.getSignature();
             Class returnType = ms.getMethod().getReturnType();
+            // 对异常进行处理
             resp = handleException(returnType, e);
+            // 发送一个系统异常事件
+            try {
+                publishSysExceptionEvent(className,methodName,e);
+            } catch (Exception e2) {
+                log.warn("publishSysEvent error,msg = {}",e2.getMessage());
+            }
         }
         Long endTimeMillis = System.currentTimeMillis();
         Long spend = endTimeMillis - startTimeMillis;
         log.info("class:{},methodName:{},spend:{} ms,resp:{}", className, methodName, spend, resp);
         if (spend > EXPECT_MAX_HANDLE_TIME) {
             log.warn("class:{},methodName:{},spend:{}", className, methodName, spend);
+            // 发送一个系统超时事件
+            try {
+                publishSysTimeoutEvent(className,methodName,spend);
+            } catch (Exception e2) {
+                log.warn("publishSysEvent error,msg = {}",e2.getMessage());
+            }
         }
         return resp;
     }
@@ -65,11 +83,6 @@ public class ApiAspect {
      */
     private GeneralResult handleException(Class returnType, Exception e) throws Throwable {
         GeneralResult errorResult = new GeneralResult();
-//        if (returnType.equals(GeneralResult.class)) {
-//            errorResult = new GeneralResult();
-//        } else {
-//            throw e;
-//        }
         if (e instanceof GeneralException) {
             errorResult.setCode(((GeneralException) e).getCode());
             errorResult.setDesc(((GeneralException) e).getDesc());
@@ -81,10 +94,37 @@ public class ApiAspect {
         return errorResult;
     }
     
+    /**
+     * Thread LocalMap 中放入一个traceId
+     * */
     private boolean insertMDC() {
         UUID uuid = UUID.randomUUID();
         String uniqueId = uuid.toString().replace("-", "");
         MDC.put(TRACE_ID, uniqueId);
         return true;
+    }
+    
+    /**
+     * 发送一个系统异常事件
+     * */
+    private void publishSysExceptionEvent(String classSimpleName,String methodName,Exception exception) {
+        SysExceptionData sysExceptionData = new SysExceptionData();
+        sysExceptionData.setClassSimpleName(classSimpleName);
+        sysExceptionData.setMethodName(methodName);
+        sysExceptionData.setException(exception);
+        sysExceptionData.setTraceId(MDC.get(TRACE_ID));
+        SpringUtils.publishEvent(new GeneralEvent(EventCode.SYS_API_ERROR,sysExceptionData));
+    }
+    
+    /**
+     * 发送一个系统超时事件
+     * */
+    private void publishSysTimeoutEvent(String classSimpleName,String methodName,long invokeTime) {
+        SysTimeoutData sysTimeoutData = new SysTimeoutData();
+        sysTimeoutData.setClassSimpleName(classSimpleName);
+        sysTimeoutData.setMethodName(methodName);
+        sysTimeoutData.setInvokeTime(invokeTime);
+        sysTimeoutData.setTraceId(MDC.get(TRACE_ID));
+        SpringUtils.publishEvent(new GeneralEvent(EventCode.SYS_API_TIMEOUT,sysTimeoutData));
     }
 }

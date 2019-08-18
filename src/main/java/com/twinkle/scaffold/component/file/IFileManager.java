@@ -8,7 +8,7 @@ import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.twinkle.scaffold.component.file.data.SimpleFile;
+import com.twinkle.scaffold.common.data.file.SimpleFile;
 
 /**
  * 文件管理组件 <br/>

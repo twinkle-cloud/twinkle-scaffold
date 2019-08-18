@@ -1,4 +1,4 @@
-package com.twinkle.scaffold.component.file.data;
+package com.twinkle.scaffold.common.data.file;
 
 import java.io.InputStream;
 import java.io.Serializable;

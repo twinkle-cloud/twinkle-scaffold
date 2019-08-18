@@ -33,10 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.twinkle.scaffold.common.constants.ResultCode;
 import com.twinkle.scaffold.common.data.GeneralResult;
+import com.twinkle.scaffold.common.data.file.SimpleFile;
 import com.twinkle.scaffold.common.utils.ApiParamUtils;
 import com.twinkle.scaffold.common.utils.ZipUtils;
 import com.twinkle.scaffold.component.file.IFileManager;
-import com.twinkle.scaffold.component.file.data.SimpleFile;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

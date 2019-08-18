@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.twinkle.scaffold.common.constants.ResultCode;
+import com.twinkle.scaffold.common.data.file.SimpleFile;
 import com.twinkle.scaffold.common.error.GeneralException;
-import com.twinkle.scaffold.component.file.data.SimpleFile;
 import com.twinkle.scaffold.component.file.repo.FileEntryRepo;
 import com.twinkle.scaffold.component.file.repo.domain.FileEntry;
 
