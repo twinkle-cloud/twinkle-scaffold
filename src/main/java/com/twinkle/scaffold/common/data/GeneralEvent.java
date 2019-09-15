@@ -32,6 +32,10 @@ public class GeneralEvent<T> implements Serializable{
      * */
     private Long timestamp;
     /**
+     * traceId
+     * */
+    private String traceId;
+    /**
      * 事件具体数据
      * */
     @NonNull

@@ -19,7 +19,5 @@ public class SysExceptionData {
     
     private String methodName;
     
-    private String traceId;
-    
     private Exception exception;
 }

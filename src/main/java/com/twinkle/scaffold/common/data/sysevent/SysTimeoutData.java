@@ -19,7 +19,5 @@ public class SysTimeoutData {
     
     private String methodName;
     
-    private String traceId;
-    
     private Long invokeTime;
 }

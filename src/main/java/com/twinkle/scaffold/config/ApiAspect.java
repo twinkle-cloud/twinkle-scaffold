@@ -18,7 +18,7 @@ import com.twinkle.scaffold.common.data.GeneralResult;
 import com.twinkle.scaffold.common.data.sysevent.SysExceptionData;
 import com.twinkle.scaffold.common.data.sysevent.SysTimeoutData;
 import com.twinkle.scaffold.common.error.GeneralException;
-import com.twinkle.scaffold.common.utils.SpringUtils;
+import com.twinkle.scaffold.common.utils.AppEventUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,12 +34,12 @@ public class ApiAspect {
 
     private static final Long EXPECT_MAX_HANDLE_TIME = 2 * 1000L; // 2 s
     private static final String CONTROLLER_BASE_PACKAGE = "com.twinkle.scaffold.modules";
-    private static final String TRACE_ID = "traceId";
     
     /**
      * 打印输入输出及处理时间过长的日志 针对异常的统一处理
      */
-    @Around("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api..*.*(..))")
+    @Around("execution(public * " + CONTROLLER_BASE_PACKAGE + "..api..*.*(..))"
+            + "|| execution(public * " + CONTROLLER_BASE_PACKAGE + "..task..*.*(..))")
     public Object aroundApi(ProceedingJoinPoint pjp) throws Throwable {
         // 放入一个tranceId 方便跟踪日志
         insertMDC();
@@ -100,7 +100,7 @@ public class ApiAspect {
     private boolean insertMDC() {
         UUID uuid = UUID.randomUUID();
         String uniqueId = uuid.toString().replace("-", "");
-        MDC.put(TRACE_ID, uniqueId);
+        MDC.put(AspectConstant.TRACE_ID, uniqueId);
         return true;
     }
     
@@ -112,8 +112,7 @@ public class ApiAspect {
         sysExceptionData.setClassSimpleName(classSimpleName);
         sysExceptionData.setMethodName(methodName);
         sysExceptionData.setException(exception);
-        sysExceptionData.setTraceId(MDC.get(TRACE_ID));
-        SpringUtils.publishEvent(new GeneralEvent(EventCode.SYS_API_ERROR,sysExceptionData));
+        AppEventUtils.publishSpringEvent(new GeneralEvent(EventCode.SYS_API_ERROR,sysExceptionData));
     }
     
     /**
@@ -124,7 +123,6 @@ public class ApiAspect {
         sysTimeoutData.setClassSimpleName(classSimpleName);
         sysTimeoutData.setMethodName(methodName);
         sysTimeoutData.setInvokeTime(invokeTime);
-        sysTimeoutData.setTraceId(MDC.get(TRACE_ID));
-        SpringUtils.publishEvent(new GeneralEvent(EventCode.SYS_API_TIMEOUT,sysTimeoutData));
+        AppEventUtils.publishSpringEvent(new GeneralEvent(EventCode.SYS_API_TIMEOUT,sysTimeoutData));
     }
 }

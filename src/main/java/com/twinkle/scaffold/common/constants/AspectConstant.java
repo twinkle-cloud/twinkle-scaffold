@@ -26,5 +26,5 @@ public class AspectConstant {
     
     public static final String APISCY_PARAM_CURRENTUSERNAME = "currentUserName";
     
-    
+    public static final String TRACE_ID = "traceId";
 }

@@ -5,8 +5,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import com.twinkle.scaffold.common.data.GeneralEvent;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Slf4j
-public class SpringUtils implements ApplicationContextAware {
+public class SpringBeanUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
@@ -42,7 +40,4 @@ public class SpringUtils implements ApplicationContextAware {
         return applicationContext.getBean(name, type);
     }
     
-    public static void publishEvent(GeneralEvent event){
-        applicationContext.publishEvent(event);
-    }
 }

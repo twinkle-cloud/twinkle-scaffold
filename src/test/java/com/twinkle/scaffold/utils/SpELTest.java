@@ -29,7 +29,6 @@ public class SpELTest {
         sysExceptionData.setClassSimpleName("DemoController");
         sysExceptionData.setMethodName("test1");
         sysExceptionData.setException(null);
-        sysExceptionData.setTraceId("1344");
         GeneralEvent sysExceptionEvent = new GeneralEvent(EventCode.SYS_API_ERROR,sysExceptionData);
         EvaluationContext context = new StandardEvaluationContext();
         context.setVariable("sysExceptionEvent", sysExceptionEvent);
