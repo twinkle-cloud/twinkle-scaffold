@@ -91,16 +91,16 @@ public class RedisClient {
     /**
      * 从redis的String类型中，获取一个对象
      */
-	public <T> T getObj(String key,Class<?> T) {
+	public <T> T getObj(String key,Class<T> clazz) {
 	    Object obj = redisTemplate.opsForValue().get(key);
 	    String jsonStr = JSON.toJSONString(obj);
-	    return JSON.parseObject(jsonStr, T);
+	    return JSON.parseObject(jsonStr, clazz);
 	}
 
 	/**
 	 * 获取Set集合，set不可重复
 	 */
-	public <T> Set<T> getSet(String key,Class<?> T) {
+	public <T> Set<T> getSet(String key,Class<?> clazz) {
 	    return (Set<T>)redisTemplate.opsForSet().members(key);
 	}
 
@@ -143,14 +143,14 @@ public class RedisClient {
     /**
      * 按顺序，获取一个item
      */
-    public <T> T popFirstItem(String key,Class<?> T) {
+    public <T> T popFirstItem(String key,Class<?> clazz) {
       return (T) redisTemplate.opsForList().leftPop(key);
     }
     
 	/**
 	 * 获取一个list
 	 */
-	public <T> List<T> getList(String key,Class<?> T) {
+	public <T> List<T> getList(String key,Class<?> clazz) {
 	    Long size = redisTemplate.opsForList().size(key);
 	    return (List<T>) redisTemplate.opsForList().range(key, 0, size);
 	}
@@ -190,7 +190,7 @@ public class RedisClient {
 	/**
 	 * 获取一个Map中Item
 	 */
-	public <T> T getHashSetValue(String key, String mapKey,Class<?> T) {
+	public <T> T getHashSetValue(String key, String mapKey,Class<?> clazz) {
 	    return (T) redisTemplate.opsForHash().get(key, mapKey);
 	}
 
