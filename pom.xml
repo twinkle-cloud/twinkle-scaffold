@@ -28,7 +28,7 @@
         <commonspool.version>2.6.2</commonspool.version>
         <commonslang.version>3.8.1</commonslang.version>
         <commonscollection.version>4.1</commonscollection.version>
-        <commonbeanutils.version>1.9.3</commonbeanutils.version>
+        <commonbeanutils.version>1.9.4</commonbeanutils.version>
         <hibernatejpa.version>1.0.2.Final</hibernatejpa.version>
         <hibernatevalidator.version>6.0.13.Final</hibernatevalidator.version>
         <validationapi.version>2.0.1.Final</validationapi.version>
